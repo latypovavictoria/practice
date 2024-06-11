@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-nginx
+  template:
+    metadata:
+      labels:
+        app: mysql-nginx
+    spec:
+      containers:
+        - name: mysql-container
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: your_root_password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
