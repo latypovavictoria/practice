@@ -1,0 +1,27 @@
+name: Deploy to Minikube
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Minikube
+        run: |
+          minikube start
+          kubectl config use-context minikube
+
+      - name: Load Docker image
+        run: |
+          docker load -i path/to/your/docker/image.tar
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f path/to/your/kubernetes/manifests
